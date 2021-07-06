@@ -3,15 +3,16 @@ package com.javadocfast.crud.seed;
 import com.javadocfast.crud.config.ERole;
 import com.javadocfast.crud.entity.Role;
 import com.javadocfast.crud.repository.IRoleRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
-@Slf4j
 @Component
 public class SeedRolesTable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SeedRolesTable.class);
 
     private static IRoleRepository roleRepository;
 
@@ -28,9 +29,9 @@ public class SeedRolesTable {
 
             // Insert Data
             roleRepository.saveAll(Arrays.asList(role01, role02));
-            log.info("Roles Table Seeded.");
+            LOGGER.info("Roles Table Seeded.");
         } else {
-            log.trace("Roles Seeding Not Required.");
+            LOGGER.trace("Roles Seeding Not Required.");
         }
     }
 

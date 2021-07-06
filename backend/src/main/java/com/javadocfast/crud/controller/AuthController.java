@@ -11,6 +11,7 @@ import com.javadocfast.crud.repository.IRoleRepository;
 import com.javadocfast.crud.repository.IUserRepository;
 import com.javadocfast.crud.security.jwt.JwtUtils;
 import com.javadocfast.crud.security.service.CustomizeUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,23 +32,23 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final IUserRepository userRepository;
-    private final IRoleRepository roleRepository;
-    private final PasswordEncoder encoder;
-    private final JwtUtils jwtUtils;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private IUserRepository userRepository;
+
+    @Autowired
+    private IRoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Value("${javadocfast.app.jwtExpirationMs}")
     private int jwtExpirationMs;
-
-    public AuthController(AuthenticationManager authenticationManager, IUserRepository userRepository,
-                          IRoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.encoder = encoder;
-        this.jwtUtils = jwtUtils;
-    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {

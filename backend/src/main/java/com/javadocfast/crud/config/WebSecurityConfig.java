@@ -2,7 +2,6 @@ package com.javadocfast.crud.config;
 
 import com.javadocfast.crud.security.jwt.AuthEntryPointJwt;
 import com.javadocfast.crud.security.jwt.AuthTokenFilter;
-import com.javadocfast.crud.security.jwt.JwtUtils;
 import com.javadocfast.crud.security.service.CustomizeUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,20 +24,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 )
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CustomizeUserService customizeUserService;
-    private final AuthEntryPointJwt unauthorizedHandler;
-    private final JwtUtils jwtUtils;
+    @Autowired
+    private CustomizeUserService customizeUserService;
 
-    public WebSecurityConfig(CustomizeUserService customizeUserService, AuthEntryPointJwt unauthorizedHandler,
-                             JwtUtils jwtUtils) {
-        this.customizeUserService = customizeUserService;
-        this.unauthorizedHandler = unauthorizedHandler;
-        this.jwtUtils = jwtUtils;
-    }
+    @Autowired
+    private AuthEntryPointJwt unauthorizedHandler;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter(jwtUtils, customizeUserService);
+        return new AuthTokenFilter();
     }
 
     @Bean
