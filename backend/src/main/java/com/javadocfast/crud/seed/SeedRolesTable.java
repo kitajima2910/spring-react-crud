@@ -15,7 +15,6 @@ public class SeedRolesTable {
 
     private static IRoleRepository roleRepository;
 
-    @Autowired
     public SeedRolesTable(IRoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
