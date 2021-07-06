@@ -1,6 +1,5 @@
 package com.javadocfast.crud.security.service;
 
-import com.javadocfast.crud.entity.Role;
 import com.javadocfast.crud.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

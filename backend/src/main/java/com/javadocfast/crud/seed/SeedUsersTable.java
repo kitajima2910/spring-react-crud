@@ -5,8 +5,8 @@ import com.javadocfast.crud.entity.Role;
 import com.javadocfast.crud.entity.User;
 import com.javadocfast.crud.repository.IRoleRepository;
 import com.javadocfast.crud.repository.IUserRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +17,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-@Slf4j
 @Component
 public class SeedUsersTable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SeedUsersTable.class);
 
     private static IUserRepository userRepository;
     private static IRoleRepository roleRepository;
@@ -55,9 +56,9 @@ public class SeedUsersTable {
 
             // Insert Data
             userRepository.saveAll(Arrays.asList(user01, user02));
-            log.info("Users Table Seeded.");
+            LOGGER.info("Users Table Seeded.");
         } else {
-            log.trace("Users Seeding Not Required.");
+            LOGGER.trace("Users Seeding Not Required.");
         }
     }
 

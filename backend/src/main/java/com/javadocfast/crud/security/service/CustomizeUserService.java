@@ -14,11 +14,8 @@ import javax.transaction.Transactional;
 @Transactional
 public class CustomizeUserService implements UserDetailsService {
 
-    private final IUserRepository userRepository;
-
-    public CustomizeUserService(IUserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private IUserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
