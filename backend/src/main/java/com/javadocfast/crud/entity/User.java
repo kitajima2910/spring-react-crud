@@ -3,13 +3,10 @@ package com.javadocfast.crud.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -58,6 +55,26 @@ public class User {
     private Date updateAt;
 
     private Date deleteAt;
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(String username, String fullName, Date birthday, int gender, String address, String postcode,
+                String phone, String linkImage, String email, String password) {
+        this.username = username;
+        this.fullName = fullName;
+        this.birthday = birthday;
+        this.gender = gender;
+        this.address = address;
+        this.postcode = postcode;
+        this.phone = phone;
+        this.linkImage = linkImage;
+        this.email = email;
+        this.password = password;
+    }
 
     public User(String username, String fullName, Date birthday, int gender, String address, String postcode,
                 String phone, String linkImage, String email, String password, Set<Role> roles) {
