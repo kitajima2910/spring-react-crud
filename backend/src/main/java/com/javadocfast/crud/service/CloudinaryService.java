@@ -14,9 +14,9 @@ import java.util.Map;
 public class CloudinaryService {
 
     private Cloudinary cloudinary;
-    private String cloudName = "";
-    private String apiKey = "";
-    private String apiSecret = "";
+    private String cloudName = "fpt-aptech-huypq";
+    private String apiKey = "791563656445282";
+    private String apiSecret = "d4rpeFOJuFrOuZaizHIMkSfCGWo";
     private Map<String, String> valuesMap;
 
     public CloudinaryService() {
@@ -37,12 +37,7 @@ public class CloudinaryService {
     }
 
     public Map delete(String id, Map<String, String> options) throws IOException {
-        Map result = null;
-        try {
-            result = cloudinary.uploader().destroy(id, options);
-        } catch(Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+        Map result = cloudinary.uploader().destroy(id, options);
         return result;
     }
 

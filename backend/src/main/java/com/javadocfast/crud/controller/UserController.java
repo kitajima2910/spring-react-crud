@@ -92,25 +92,31 @@ public class UserController {
 
         user.setRoles(roles);
 
+
         // Check Image Avatar
         MultipartFile multipartFile = updateUserRequest.getAvatar();
-        BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
-        if(bufferedImage == null){
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Invalid image"));
+
+        if(multipartFile != null) {
+            BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
+            if(bufferedImage == null){
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse("Error: Invalid image"));
+            }
+
+            // Folder To Save Avatar
+            options.put("folder", avatar);
+
+            if(user.getNameImage() != null) {
+                // Delete Old Avatar
+                cloudinaryService.delete(user.getNameImage(), options);
+            }
+
+            // Update New Avatar
+            Map result = cloudinaryService.upload(multipartFile, options);
+            user.setLinkImage(result.get("url").toString());
+            user.setNameImage(result.get("public_id").toString());
         }
-
-        // Folder To Save Avatar
-        options.put("folder", avatar);
-
-        // Delete Old Avatar
-        cloudinaryService.delete(user.getNameImage(), options);
-
-        // Update New Avatar
-        Map result = cloudinaryService.upload(multipartFile, options);
-        user.setLinkImage(result.get("url").toString());
-        user.setNameImage(result.get("public_id").toString());
 
         // Update row of table User in Database
         userRepository.save(user);
