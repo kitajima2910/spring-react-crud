@@ -42,7 +42,7 @@ public class SeedUsersTable {
             roles01.add(roleAdmin01);
             roles01.add(roleUser01);
             User user01 = new User("hoaipx", "Phạm Xuân Hoài", format.parse("1995-10-29"),
-                    0, "TP. Hồ Chí Minh", "71418", "0901858004", null,
+                    0, "TP. Hồ Chí Minh", "71418", "0901858004", null, null,
                     "kitajima2910@gmail.com",
                     new BCryptPasswordEncoder().encode("123456"), roles01);
 
@@ -51,7 +51,7 @@ public class SeedUsersTable {
             Role roleUser02 = roleRepository.findByName(ERole.ROLE_USER).get();
             roles02.add(roleUser02);
             User user02 = new User("huypq", "Phạm Quang Huy", null, 0,
-                    "TP. Hồ Chí Minh","72300", null, null, "huypq@gmail.com",
+                    "TP. Hồ Chí Minh","72300", null, null, null, "huypq@gmail.com",
                     new BCryptPasswordEncoder().encode("123456"), roles02);
 
             // Insert Data

@@ -70,8 +70,18 @@ public class AuthController {
                         jwtExpirationMs,
                         customizeUser.getId(),
                         customizeUser.getUsername(),
+                        customizeUser.getFullName(),
+                        customizeUser.getBirthday(),
+                        customizeUser.getGender(),
+                        customizeUser.getAddress(),
+                        customizeUser.getPostcode(),
+                        customizeUser.getPhone(),
+                        customizeUser.getLinkImage(),
+                        customizeUser.getNameImage(),
                         customizeUser.getEmail(),
-                        roles
+                        roles,
+                        customizeUser.getCreatedAt(),
+                        customizeUser.getUpdatedAt()
                 )
         );
     }
@@ -111,12 +121,12 @@ public class AuthController {
                         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
-
                         break;
                     default:
                         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(userRole);
+                        break;
                 }
             });
         }

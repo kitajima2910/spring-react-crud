@@ -35,6 +35,7 @@ public class User {
     private String postcode;
     private String phone;
     private String linkImage;
+    private String nameImage;
     private String email;
 
     @JsonIgnore
@@ -49,12 +50,12 @@ public class User {
     private Set<Role> roles;
 
     @CreationTimestamp
-    private Date createAt;
+    private Date createdAt;
 
     @CreationTimestamp
-    private Date updateAt;
+    private Date updatedAt;
 
-    private Date deleteAt;
+    private Date deletedAt;
 
     public User(String username, String email, String password) {
         this.username = username;
@@ -62,8 +63,10 @@ public class User {
         this.password = password;
     }
 
-    public User(String username, String fullName, Date birthday, int gender, String address, String postcode,
-                String phone, String linkImage, String email, String password) {
+    public User(long id, String username, String fullName, Date birthday, int gender, String address, String postcode,
+                String phone, String linkImage, String nameImage, String email, String password, Date createdAt,
+                Date updatedAt) {
+        this.id = id;
         this.username = username;
         this.fullName = fullName;
         this.birthday = birthday;
@@ -72,12 +75,15 @@ public class User {
         this.postcode = postcode;
         this.phone = phone;
         this.linkImage = linkImage;
+        this.nameImage = nameImage;
         this.email = email;
         this.password = password;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public User(String username, String fullName, Date birthday, int gender, String address, String postcode,
-                String phone, String linkImage, String email, String password, Set<Role> roles) {
+                String phone, String linkImage, String nameImage, String email, String password, Set<Role> roles) {
         this.username = username;
         this.fullName = fullName;
         this.birthday = birthday;
@@ -86,6 +92,7 @@ public class User {
         this.postcode = postcode;
         this.phone = phone;
         this.linkImage = linkImage;
+        this.nameImage = nameImage;
         this.email = email;
         this.password = password;
         this.roles = roles;

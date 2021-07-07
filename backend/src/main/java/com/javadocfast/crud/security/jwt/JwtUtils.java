@@ -45,21 +45,16 @@ public class JwtUtils {
             return true;
         } catch (SignatureException e) {
             LOGGER.error("Invalid JWT signature: {}", e.getMessage());
-            return false;
         } catch (MalformedJwtException e) {
             LOGGER.error("Invalid JWT token: {}", e.getMessage());
-            return false;
         } catch (ExpiredJwtException e) {
             LOGGER.error("JWT token is expired: {}", e.getMessage());
-            return false;
         } catch (UnsupportedJwtException e) {
             LOGGER.error("JWT token is unsupported: {}", e.getMessage());
-            return false;
         } catch (IllegalArgumentException e) {
             LOGGER.error("JWT claims string is empty: {}", e.getMessage());
-            return false;
         }
-
+        return false;
     }
 
     public String parseJwt(HttpServletRequest request) {

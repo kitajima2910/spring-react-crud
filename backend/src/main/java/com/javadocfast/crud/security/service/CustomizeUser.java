@@ -14,9 +14,11 @@ public class CustomizeUser extends User implements UserDetails {
 
     private Collection<? extends  GrantedAuthority> authorities;
 
-    public CustomizeUser(String username, String fullName, Date birthday, int gender, String address, String postcode,
-                         String phone, String linkImage, String email, String password, Collection<? extends GrantedAuthority> authorities) {
-        super(username, fullName, birthday, gender, address, postcode, phone, linkImage, email, password);
+    public CustomizeUser(long id, String username, String fullName, Date birthday, int gender, String address, String postcode,
+                         String phone, String linkImage, String nameImage, String email, String password, Date createdAt,
+                         Date updatedAt, Collection<? extends GrantedAuthority> authorities) {
+        super(id, username, fullName, birthday, gender, address, postcode, phone, linkImage, nameImage, email, password,
+                createdAt, updatedAt);
         this.authorities = authorities;
     }
 
@@ -25,6 +27,7 @@ public class CustomizeUser extends User implements UserDetails {
                 .map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
 
         return new CustomizeUser(
+                user.getId(),
                 user.getUsername(),
                 user.getFullName(),
                 user.getBirthday(),
@@ -33,8 +36,11 @@ public class CustomizeUser extends User implements UserDetails {
                 user.getPostcode(),
                 user.getPhone(),
                 user.getLinkImage(),
+                user.getNameImage(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getCreatedAt(),
+                user.getUpdatedAt(),
                 authorities
         );
     }
