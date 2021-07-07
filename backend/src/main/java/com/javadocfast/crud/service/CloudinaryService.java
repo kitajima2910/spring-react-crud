@@ -14,9 +14,9 @@ import java.util.Map;
 public class CloudinaryService {
 
     private Cloudinary cloudinary;
-    private String cloudName = "";
-    private String apiKey = "";
-    private String apiSecret = "";
+    private String cloudName = "javadocfast";
+    private String apiKey = "113662752339543";
+    private String apiSecret = "LMqFHgg53Cswt_zJqBPORkEFiSA";
     private Map<String, String> valuesMap;
 
     public CloudinaryService() {
