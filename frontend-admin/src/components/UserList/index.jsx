@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from "../../contexts/GlobalProvider";
+import { AuthLogout } from "./../../contexts/actions/AuthAction";
 
 const UserList = () => {
-  return <div>User List</div>;
+  const { authDispatch: dispatch } = useContext(GlobalContext);
+
+  const handleLogout = () => {
+    AuthLogout()(dispatch);
+  };
+
+  return (
+    <div>
+      <button onClick={handleLogout}>Logout</button>
+    </div>
+  );
 };
 
 export default UserList;

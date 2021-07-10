@@ -1,18 +1,28 @@
 import React, { useContext } from "react";
-import { Grid, TextField, Button, InputAdornment } from "@material-ui/core";
+import {
+  Grid,
+  TextField,
+  Button,
+  InputAdornment,
+  FormHelperText,
+} from "@material-ui/core";
 import { AccountCircle, LockRounded } from "@material-ui/icons";
 import logo from "./../../assets/img/avatar.jpg";
 import { GlobalContext } from "./../../contexts/GlobalProvider";
-import { useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { AuthLogin } from "./../../contexts/actions/AuthAction";
 
 const Login = () => {
-  const { authDispatch: dispatch } = useContext(GlobalContext);
-  const history = useHistory();
+  const { authDispatch: dispatch, messageLogin } = useContext(GlobalContext);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    localStorage.setItem("user", JSON.stringify({ roles: "ROLE_USER" }));
-    history.push("/");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    await AuthLogin(data)(dispatch);
   };
 
   return (
@@ -29,7 +39,7 @@ const Login = () => {
           style={{ padding: 10 }}
         >
           <form
-            onSubmit={handleLogin}
+            onSubmit={handleSubmit(onSubmit)}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -40,10 +50,20 @@ const Login = () => {
             <Grid container justifyContent="center">
               <img src={logo} alt="logo" loading="lazy" width="100" />
             </Grid>
+            <FormHelperText
+              style={{
+                color: "red",
+                textAlign: "center",
+                textTransform: "uppercase",
+              }}
+            >
+              {messageLogin}
+            </FormHelperText>
             <TextField
               label="Tài khoản"
               autoComplete="off"
               margin="normal"
+              {...register("username", { required: true })}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -52,11 +72,17 @@ const Login = () => {
                 ),
               }}
             />
+            {errors.username && (
+              <FormHelperText style={{ color: "red" }}>
+                Tài khoản chưa nhập
+              </FormHelperText>
+            )}
             <TextField
               label="Mật khẩu"
               type="password"
               autoComplete="current-password"
               margin="normal"
+              {...register("password", { required: true })}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -65,6 +91,11 @@ const Login = () => {
                 ),
               }}
             />
+            {errors.password && (
+              <FormHelperText style={{ color: "red" }}>
+                Mật khẩu chưa nhập
+              </FormHelperText>
+            )}
             <Button
               type="submit"
               variant="contained"
