@@ -1,13 +1,13 @@
 import axios from "axios";
 
-const user = JSON.parse(localStorage.getItem("user"));
+export const authHeader = () => {
+  const getUser = JSON.parse(localStorage.getItem("user"));
+  const jsonHeader = { "Content-type": "application/json" };
 
-const jsonHeader = { "Content-type": "application/json" };
-
-const authHeader = () => {
-  if (user && user.accessToken) {
+  if (getUser && getUser.token) {
     return {
-      Authorization: "Bearer " + user.accessToken,
+      ...jsonHeader,
+      Authorization: "Bearer " + getUser.token,
     };
   } else {
     return jsonHeader;
@@ -15,6 +15,6 @@ const authHeader = () => {
 };
 
 export default axios.create({
-  baseURL: "http://localhost:8080",
-  headers: { ...jsonHeader, authHeader },
+  baseURL: "http://localhost:8080/api",
+  headers: authHeader(),
 });

@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, useEffect } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import AuthReducer from "./reducers/AuthReducer";
 
@@ -7,12 +8,12 @@ export const GlobalContext = createContext({});
 
 const GlobalProvider = ({ children }) => {
   // Get User localStorage
-  const getUser = JSON.parse(localStorage.getItem("user"));
   const history = useHistory();
+  const [messageLogin, setMessageLogin] = useState("");
 
   // Auth
   const [authState, authDispatch] = useReducer(AuthReducer, {
-    user: null,
+    user: JSON.parse(localStorage.getItem("user")),
   });
 
   useEffect(() => {
@@ -22,17 +23,33 @@ const GlobalProvider = ({ children }) => {
       history.go(1);
     };
 
+    console.log(authState.user);
+
     // Check Login
-    if (getUser) {
-      history.push("/");
+    if (authState.user) {
+      if (authState.user?.error) {
+        localStorage.removeItem("user");
+        setMessageLogin("Tài khoản hoặc mật khẩu không đúng");
+        history.push("/login");
+      } else {
+        if (authState.user.roles.includes("ROLE_ADMIN")) {
+          history.push("/");
+        } else {
+          localStorage.removeItem("user");
+          setMessageLogin("Tài khoản không có quyền truy cập");
+          history.push("/login");
+        }
+      }
     } else {
+      setMessageLogin("");
       history.push("/login");
     }
-  }, [getUser, history]);
+  }, [authState, history]);
 
   return (
     <GlobalContext.Provider
       value={{
+        messageLogin,
         authState,
         authDispatch,
       }}
