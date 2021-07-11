@@ -14,7 +14,7 @@ public class JwtResponse {
 
     private String token;
     private String type = "Bearer";
-    private int jwtExpirationMs;
+    private long jwtExpirationMs;
     private long id;
     private String username;
     private String fullName;
@@ -30,7 +30,7 @@ public class JwtResponse {
     private Date createdAt;
     private Date updatedAt;
 
-    public JwtResponse(String token, int jwtExpirationMs, long id, String username, String fullName,
+    public JwtResponse(String token, long jwtExpirationMs, long id, String username, String fullName,
                        Date birthday, int gender, String address, String postcode, String phone, String linkImage,
                        String nameImage, String email, List<String> roles, Date createdAt, Date updatedAt) {
         this.token = token;
