@@ -23,8 +23,6 @@ const GlobalProvider = ({ children }) => {
       history.go(1);
     };
 
-    console.log(authState.user);
-
     // Check Login
     if (authState.user) {
       if (authState.user?.error) {
@@ -33,6 +31,15 @@ const GlobalProvider = ({ children }) => {
         history.push("/login");
       } else {
         if (authState.user.roles.includes("ROLE_ADMIN")) {
+          setInterval(() => {
+            if (authState.user.jwtExpirationMs < new Date().getTime()) {
+              localStorage.removeItem("user");
+              setMessageLogin("");
+              history.push("/login");
+              return;
+            }
+          }, 50000);
+
           history.push("/");
         } else {
           localStorage.removeItem("user");
