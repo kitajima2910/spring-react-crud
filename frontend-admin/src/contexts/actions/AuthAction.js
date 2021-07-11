@@ -5,11 +5,9 @@ export const AuthLogin = (data) => async (dispatch) => {
   try {
     const res = await AuthService.login(data);
 
-    localStorage.setItem("user", JSON.stringify(res.data));
-
     dispatch({
       type: LOGIN,
-      payload: res.data,
+      payload: res !== undefined ? res.data : null,
     });
   } catch (error) {
     console.error(error);

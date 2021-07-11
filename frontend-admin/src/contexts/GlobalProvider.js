@@ -13,6 +13,7 @@ const GlobalProvider = ({ children }) => {
 
   // Auth
   const [authState, authDispatch] = useReducer(AuthReducer, {
+    isLogined: false,
     user: JSON.parse(localStorage.getItem("user")),
   });
 
@@ -23,29 +24,21 @@ const GlobalProvider = ({ children }) => {
       history.go(1);
     };
 
+    console.log(authState);
+
     // Check Login
-    if (authState.user) {
-      if (authState.user?.error) {
-        localStorage.removeItem("user");
+    if (authState.isLogined) {
+      if (authState.user === null) {
         setMessageLogin("Tài khoản hoặc mật khẩu không đúng");
         history.push("/login");
+        return;
+      }
+      if (authState.user.roles.includes("ROLE_ADMIN")) {
+        localStorage.setItem("user", JSON.stringify(authState.user));
+        history.push("/");
       } else {
-        if (authState.user.roles.includes("ROLE_ADMIN")) {
-          setInterval(() => {
-            if (authState.user.jwtExpirationMs < new Date().getTime()) {
-              localStorage.removeItem("user");
-              setMessageLogin("");
-              history.push("/login");
-              return;
-            }
-          }, 50000);
-
-          history.push("/");
-        } else {
-          localStorage.removeItem("user");
-          setMessageLogin("Tài khoản không có quyền truy cập");
-          history.push("/login");
-        }
+        setMessageLogin("Tài khoản không có quyền truy cập");
+        history.push("/login");
       }
     } else {
       setMessageLogin("");
