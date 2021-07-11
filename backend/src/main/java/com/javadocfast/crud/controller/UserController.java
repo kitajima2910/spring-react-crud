@@ -10,6 +10,10 @@ import com.javadocfast.crud.repository.IUserRepository;
 import com.javadocfast.crud.service.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +23,7 @@ import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -43,12 +44,34 @@ public class UserController {
 
     private Map<String, String> options = new HashMap<>();
 
+    @GetMapping("/list")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getUsers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "3") int pageSize,
+            @RequestParam(defaultValue = "id") String sortField,
+            @RequestParam(defaultValue = "desc") String sortDir,
+            @RequestParam(defaultValue = "") String keyword
+    ) {
+
+        Pageable pageable = PageRequest.of(
+                page - 1, pageSize,
+                "asc".equals(sortDir) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending()
+        );
+
+        Page<User> users = "".equals(keyword) ?
+                userRepository.findAll(pageable) :
+                userRepository.findUsersByFullNameContains(keyword, pageable);
+
+        return ResponseEntity.ok(users);
+    }
+
     @PutMapping("/update")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> updateUser(@Valid @ModelAttribute UpdateUserRequest updateUserRequest) throws IOException {
 
         // Check Exits Username
-        if(!userRepository.existsByUsername(updateUserRequest.getUsername())) {
+        if (!userRepository.existsByUsername(updateUserRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Unable to identify account"));
@@ -97,9 +120,9 @@ public class UserController {
         // Check Image Avatar
         MultipartFile multipartFile = updateUserRequest.getAvatar();
 
-        if(multipartFile != null) {
+        if (multipartFile != null) {
             BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
-            if(bufferedImage == null){
+            if (bufferedImage == null) {
                 return ResponseEntity
                         .badRequest()
                         .body(new MessageResponse("Error: Invalid image"));
@@ -108,7 +131,7 @@ public class UserController {
             // Folder To Save Avatar
             options.put("folder", avatar);
 
-            if(user.getNameImage() != null) {
+            if (user.getNameImage() != null) {
                 // Delete Old Avatar
                 cloudinaryService.delete(user.getNameImage(), options);
             }

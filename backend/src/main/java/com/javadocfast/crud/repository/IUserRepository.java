@@ -1,6 +1,8 @@
 package com.javadocfast.crud.repository;
 
 import com.javadocfast.crud.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +16,7 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
+
+    Page<User> findUsersByFullNameContains(String fullName, Pageable pageable);
 
 }
