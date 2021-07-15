@@ -1,14 +1,10 @@
-import { LOGIN, LOGOUT } from "./../action-types/AuthType";
 import AuthService from "../../services/AuthService";
+import { login, logout } from "../reducers/AuthReducer";
 
 export const AuthLogin = (data) => async (dispatch) => {
   try {
     const res = await AuthService.login(data);
-
-    dispatch({
-      type: LOGIN,
-      payload: res !== undefined ? res.data : null,
-    });
+    dispatch(login(res !== undefined ? res.data : { error: 401 }));
   } catch (error) {
     console.error(error);
   }
@@ -16,8 +12,5 @@ export const AuthLogin = (data) => async (dispatch) => {
 
 export const AuthLogout = () => (dispatch) => {
   AuthService.logout();
-
-  dispatch({
-    type: LOGOUT,
-  });
+  dispatch(logout());
 };

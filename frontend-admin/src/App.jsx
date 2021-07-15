@@ -1,38 +1,41 @@
 import React, { Suspense } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import GlobalProvider from "./contexts/GlobalProvider";
 import { CircularProgress } from "@material-ui/core";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import PrivateRoute from "./components/PrivateRoute";
 
 const Login = React.lazy(() => import("./components/Login"));
 const UserList = React.lazy(() => import("./components/UserList"));
 
-function App() {
+const App = () => {
   return (
-    <>
-      <Router>
-        <GlobalProvider>
-          <Suspense
-            fallback={
-              <CircularProgress
-                disableShrink
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                }}
-              />
-            }
-          >
-            <Switch>
-              <Route exact path={["/", "/user-list"]} component={UserList} />
-              <Route path="/login" component={Login} />
-            </Switch>
-          </Suspense>
-        </GlobalProvider>
-      </Router>
-    </>
+    <Router>
+      <Suspense
+        fallback={
+          <CircularProgress
+            disableShrink
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+            }}
+          />
+        }
+      >
+        <Switch>
+          <Route exact path={["/", "/login"]}>
+            <Login />
+          </Route>
+          <PrivateRoute path="/dashboard">
+            <UserList />
+          </PrivateRoute>
+          <Route path="*">
+            <h1>404 Không tìm thấy trang</h1>
+          </Route>
+        </Switch>
+      </Suspense>
+    </Router>
   );
-}
+};
 
 export default App;

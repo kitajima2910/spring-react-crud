@@ -1,23 +1,11 @@
 import axios from "axios";
 import history from "./history";
-
-export const authHeader = () => {
-  const getUser = JSON.parse(localStorage.getItem("user"));
-  const jsonHeader = { "Content-type": "application/json" };
-
-  if (getUser && getUser.token) {
-    return {
-      ...jsonHeader,
-      Authorization: "Bearer " + getUser.token,
-    };
-  } else {
-    return jsonHeader;
-  }
-};
+import queryString from "query-string";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8080/api",
-  headers: authHeader(),
+  headers: { "Content-type": "application/json" },
+  paramsSerializer: (params) => queryString.stringify(params),
 });
 
 axiosInstance.interceptors.response.use(

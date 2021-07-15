@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   TextField,
@@ -8,12 +8,16 @@ import {
 } from "@material-ui/core";
 import { AccountCircle, LockRounded } from "@material-ui/icons";
 import logo from "./../../assets/img/avatar.jpg";
-import { GlobalContext } from "./../../contexts/GlobalProvider";
 import { useForm } from "react-hook-form";
-import { AuthLogin } from "./../../contexts/actions/AuthAction";
+import { AuthLogin } from "../../store/actions/AuthAction";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
-  const { authDispatch: dispatch, messageLogin } = useContext(GlobalContext);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const [message, setMessage] = useState("");
 
   const {
     register,
@@ -21,9 +25,26 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data) => {
-    await AuthLogin(data)(dispatch);
+  const onSubmit = (data) => {
+    dispatch(AuthLogin(data));
   };
+
+  useEffect(() => {
+    if (auth.user) {
+      if (401 === auth.user.error) {
+        setMessage("Tài khoản hoặc mật khẩu không đúng");
+        history.replace("/login");
+        return;
+      }
+      if (auth.user.roles.includes("ROLE_ADMIN")) {
+        localStorage.setItem("user", JSON.stringify(auth.user));
+        history.push("/dashboard");
+      } else {
+        setMessage("Tài khoản không có quyền");
+        history.replace("/login");
+      }
+    }
+  }, [auth, history]);
 
   return (
     <>
@@ -57,7 +78,7 @@ const Login = () => {
                 textTransform: "uppercase",
               }}
             >
-              {messageLogin}
+              {message}
             </FormHelperText>
             <TextField
               label="Tài khoản"
