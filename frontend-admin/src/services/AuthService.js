@@ -1,4 +1,4 @@
-import http from "./../helpers/http";
+import http from "../helpers/http-common";
 
 class AuthService {
   login = (data) => {
