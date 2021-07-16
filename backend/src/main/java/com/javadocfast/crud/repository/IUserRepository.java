@@ -17,6 +17,6 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByEmail(String email);
 
-    Page<User> findUsersByFullNameContains(String fullName, Pageable pageable);
+    Page<User> findUsersByFullNameLike(String fullName, Pageable pageable);
 
 }

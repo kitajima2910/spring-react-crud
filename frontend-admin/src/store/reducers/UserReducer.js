@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  userGlobal: {},
   users: [],
+  totalPages: 1,
 };
 
 const UserSlice = createSlice({
@@ -10,7 +10,7 @@ const UserSlice = createSlice({
   initialState,
   reducers: {
     getUsers: (state, action) => {
-      state.userGlobal = action.payload;
+      state.totalPages = action.payload.totalPages;
       state.users = action.payload.content;
     },
   },
