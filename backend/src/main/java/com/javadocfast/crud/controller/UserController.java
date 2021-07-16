@@ -50,7 +50,7 @@ public class UserController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "3") int pageSize,
             @RequestParam(defaultValue = "id") String sortField,
-            @RequestParam(defaultValue = "desc") String sortDir,
+            @RequestParam(defaultValue = "asc") String sortDir,
             @RequestParam(defaultValue = "") String keyword
     ) {
 
@@ -61,7 +61,7 @@ public class UserController {
 
         Page<User> users = "".equals(keyword) ?
                 userRepository.findAll(pageable) :
-                userRepository.findUsersByFullNameContains(keyword, pageable);
+                userRepository.findUsersByFullNameLike("%" + keyword + "%", pageable);
 
         return ResponseEntity.ok(users);
     }

@@ -6,23 +6,30 @@ import {
   Button,
   Container,
   CssBaseline,
+  Grid,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
+  TextField,
+  Typography,
 } from "@material-ui/core";
 import Pagination from "@material-ui/lab/Pagination";
 import { UserGetAll } from "./../../store/actions/UserAction";
 import { useState } from "react";
+import TableHeader from "../TableHeader";
 
 const UserList = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { users, userGlobal } = useSelector((state) => state.user);
+  const { users, totalPages } = useSelector((state) => state.user);
   const [page, setPage] = useState(1);
+  const [valueToOrderBy, setValueToOrderBy] = useState("id");
+  const [valueToSortDir, setValueToSortDir] = useState("asc");
+  const [keyword, setKeyword] = useState("");
+  const [name, setName] = useState("");
 
   const handleLogout = () => {
     dispatch(AuthLogout());
@@ -30,28 +37,83 @@ const UserList = () => {
   };
 
   useEffect(() => {
-    dispatch(UserGetAll({ page }));
-  }, [dispatch, page]);
+    dispatch(
+      UserGetAll({
+        page,
+        sortField: valueToOrderBy,
+        sortDir: valueToSortDir,
+        keyword,
+      })
+    );
+  }, [dispatch, page, valueToOrderBy, valueToSortDir, keyword]);
+
+  const handleRequestSort = (property) => {
+    const isAscending =
+      Object.is(valueToOrderBy, property) && Object.is(valueToSortDir, "asc");
+    setValueToOrderBy(property);
+    setValueToSortDir(isAscending ? "desc" : "asc");
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setKeyword(name);
+  };
 
   return (
     <div>
       <button onClick={handleLogout}>Logout</button>
-      <hr style={{ marginBottom: "200px" }} />
+      <hr style={{ marginBottom: "20px" }} />
       <CssBaseline />
       <Container>
-        <h1>Danh sách nhân viên</h1>
+        <Grid
+          style={{
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <Grid
+            item
+            xl={6}
+            sm={6}
+            style={{ display: "flex", alignItems: "flex-end" }}
+          >
+            <Typography variant="h4" component="h4">
+              Danh sách nhân viên
+            </Typography>
+          </Grid>
+          <Grid item xl={6} sm={6}>
+            <form
+              onSubmit={handleSearch}
+              style={{
+                display: "flex",
+                flexDirection: "row-reverse",
+                alignItems: "center",
+              }}
+            >
+              <TextField
+                label="Tìm kiếm"
+                margin="normal"
+                onChange={(e) => setName(e.target.value)}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                style={{ height: 36, marginRight: 10, marginTop: 16 }}
+              >
+                Tìm Kiếm
+              </Button>
+            </form>
+          </Grid>
+        </Grid>
+
         <TableContainer component={Paper}>
           <Table style={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Mã Người Dùng</TableCell>
-                <TableCell>Tài Khoản</TableCell>
-                <TableCell>Họ & tên</TableCell>
-                <TableCell>Số điện thoại</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Hành động</TableCell>
-              </TableRow>
-            </TableHead>
+            <TableHeader
+              valueToOrderBy={valueToOrderBy}
+              valueToSortDir={valueToSortDir}
+              handleRequestSort={handleRequestSort}
+            />
             <TableBody>
               {users.map((u) => (
                 <TableRow key={u.id}>
@@ -83,13 +145,13 @@ const UserList = () => {
           style={{ marginTop: 100 }}
           variant="outlined"
           shape="rounded"
-          count={userGlobal?.totalPages}
+          count={totalPages}
           showFirstButton
           showLastButton
           onChange={(event, value) => setPage(value)}
         />
       </Container>
-      <hr style={{ marginTop: "200px" }} />
+      <hr style={{ marginTop: "20px" }} />
     </div>
   );
 };
