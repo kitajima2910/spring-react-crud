@@ -5,19 +5,24 @@ import {
   TableSortLabel,
 } from "@material-ui/core";
 
-const TableHeader = ({ valueToOrderBy, valueToSortDir, handleRequestSort }) => {
+const TableHeader = ({
+  valueToOrderBy,
+  valueToSortDir,
+  handleRequestSort,
+  fields,
+}) => {
   const createSortHandler = (property) => (event) => {
     handleRequestSort(property);
   };
 
-  const fields = [
-    { name: "id", lable: "Mã Người Dùng", dir: "asc" },
-    { name: "username", lable: "Tài Khoản", dir: "asc" },
-    { name: "fullName", lable: "Họ & tên", dir: "asc" },
-    { name: "phone", lable: "Số điện thoại", dir: "asc" },
-    { name: "email", lable: "Email", dir: "asc" },
-    { lable: "Hành Động" },
-  ];
+  // const fields = [
+  //   { name: "id", lable: "Mã Người Dùng", dir: "asc" },
+  //   { name: "username", lable: "Tài Khoản", dir: "asc" },
+  //   { name: "fullName", lable: "Họ & tên", dir: "asc" },
+  //   { name: "phone", lable: "Số điện thoại", dir: "asc" },
+  //   { name: "email", lable: "Email", dir: "asc" },
+  //   { lable: "Hành Động" },
+  // ];
 
   return (
     <TableHead>

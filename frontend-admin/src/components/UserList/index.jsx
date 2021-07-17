@@ -6,6 +6,7 @@ import {
   Button,
   Container,
   CssBaseline,
+  FormControl,
   Grid,
   Paper,
   Table,
@@ -15,6 +16,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  Select,
 } from "@material-ui/core";
 import Pagination from "@material-ui/lab/Pagination";
 import { UserGetAll } from "./../../store/actions/UserAction";
@@ -30,6 +32,7 @@ const UserList = () => {
   const [valueToSortDir, setValueToSortDir] = useState("asc");
   const [keyword, setKeyword] = useState("");
   const [name, setName] = useState("");
+  const [pageSize, setPageSize] = useState(3);
 
   const handleLogout = () => {
     dispatch(AuthLogout());
@@ -43,9 +46,10 @@ const UserList = () => {
         sortField: valueToOrderBy,
         sortDir: valueToSortDir,
         keyword,
+        pageSize,
       })
     );
-  }, [dispatch, page, valueToOrderBy, valueToSortDir, keyword]);
+  }, [dispatch, page, valueToOrderBy, valueToSortDir, keyword, pageSize]);
 
   const handleRequestSort = (property) => {
     const isAscending =
@@ -57,10 +61,30 @@ const UserList = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     setKeyword(name);
+    setPage(1);
   };
+
+  const handlePage = (event, value) => {
+    setPage(value);
+  };
+
+  const handlePageSize = (e) => {
+    setPageSize(e.target.value);
+    setPage(1);
+  };
+
+  const fields = [
+    { name: "id", lable: "Mã Người Dùng", dir: "asc" },
+    { name: "username", lable: "Tài Khoản", dir: "asc" },
+    { name: "fullName", lable: "Họ & tên", dir: "asc" },
+    { name: "phone", lable: "Số điện thoại", dir: "asc" },
+    { name: "email", lable: "Email", dir: "asc" },
+    { lable: "Hành Động" },
+  ];
 
   return (
     <div>
+      {console.log("totalPages: ", totalPages)}
       <button onClick={handleLogout}>Logout</button>
       <hr style={{ marginBottom: "20px" }} />
       <CssBaseline />
@@ -81,7 +105,16 @@ const UserList = () => {
               Danh sách nhân viên
             </Typography>
           </Grid>
-          <Grid item xl={6} sm={6}>
+          <Grid
+            item
+            xl={6}
+            sm={6}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
             <form
               onSubmit={handleSearch}
               style={{
@@ -104,6 +137,12 @@ const UserList = () => {
                 Tìm Kiếm
               </Button>
             </form>
+            <FormControl style={{ marginTop: 24, marginLeft: 10 }}>
+              <Select native value={pageSize} onChange={handlePageSize}>
+                <option value={3}>3</option>
+                <option value={5}>5</option>
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
 
@@ -113,6 +152,7 @@ const UserList = () => {
               valueToOrderBy={valueToOrderBy}
               valueToSortDir={valueToSortDir}
               handleRequestSort={handleRequestSort}
+              fields={fields}
             />
             <TableBody>
               {users.map((u) => (
@@ -143,12 +183,13 @@ const UserList = () => {
         </TableContainer>
         <Pagination
           style={{ marginTop: 100 }}
-          variant="outlined"
+          color="primary"
           shape="rounded"
           count={totalPages}
+          page={page}
+          onChange={handlePage}
           showFirstButton
           showLastButton
-          onChange={(event, value) => setPage(value)}
         />
       </Container>
       <hr style={{ marginTop: "20px" }} />
